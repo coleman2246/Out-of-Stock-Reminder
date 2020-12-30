@@ -40,14 +40,16 @@ class UrlUtils:
 
 
 
-class HtmlUtils:
+class HtmlUtilsRequest:
     def __init__(self,url):
         self.url = url
 
         urlutil = UrlUtils(self.url)
         urlutil.validate_url()
 
-        self.request = requests.get(url)
+    
+        header = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36" ,'referer':'https://www.google.com/'}
+        self.request = requests.get(url,headers=header)
 
 
     def download_html(self, name="test.html"):

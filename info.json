@@ -1,6 +1,7 @@
 {
     "supported_sites":{
-        "www.newegg.ca" : "NeweggProductPage"
+        "www.newegg.ca" : "NeweggProductPage",
+        "www.amazon.ca" : "AmazonProductPage"
     },
 
     "update_time" : 60
