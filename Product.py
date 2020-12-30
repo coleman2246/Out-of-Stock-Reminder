@@ -1,22 +1,10 @@
 from abc import ABC, abstractmethod
 import requests
 
-from urllib.parse import urlparse
-
 from bs4 import BeautifulSoup
 
-class UrlUtils:
-    def __init__(self, url):
-        self.url = url
-        self.parsed_url = urlparse(url)
-        
-
-    def extract_domain(self):
-        return self.parsed_url.netloc
-
-
-    def validate_url(self):
-        return bool(self.parsed_url.scheme)
+from Utils import UrlUtils,HtmlUtils
+    
 
 class ProductPage(ABC):
         
@@ -25,6 +13,7 @@ class ProductPage(ABC):
 
         urlutil = UrlUtils(self.url)
         urlutil.validate_url()
+        urlutil.is_acceptable_store()
 
         self.domain = urlutil.extract_domain()
         self.valid_webpage()
@@ -34,11 +23,7 @@ class ProductPage(ABC):
         pass 
 
     @abstractmethod
-    def item_name(self):
-        pass 
-
-    @abstractmethod
-    def item_name(self):
+    def get_item_name(self):
         pass 
 
     @abstractmethod
@@ -49,6 +34,7 @@ class ProductPage(ABC):
     def get_price(self):
         pass
 
+
 class NeweggProductPage(ProductPage):
     """
     Will make sure that a valid page has been requested. It must be of the domain newegg.* and it must be a valid page
@@ -56,18 +42,41 @@ class NeweggProductPage(ProductPage):
     """
 
     def __init__(self,url):
+        self.html = HtmlUtils(url)
+
         super().__init__(url)
-        self.html = requests.get(self.url)
-        self.soup = BeautifulSoup(self.html) 
+
+        self.soup = BeautifulSoup(self.html.request.text,"html.parser") 
     
     def in_stock(self):
-        r = 
+        cart_button = {}
+        for div in self.soup.findAll('div', {'class': 'nav-col'}):
+            try:
+                cart_button[div.find('span').attrs['class'][0]] = div.text.strip()
+            except:
+                return True
+        return not cart_button["btn"] == "Sold Out"
+        
+    def get_price(self):
+        if self.in_stock():
+            price = self.soup.find('li', {'class': "price-current"}).text
+            return price
+        else:
+            return -1
 
-    def item_name(self):
-        pass    
+    def get_item_name(self):
+        name = self.soup.find('h1', {'class': "product-title"}).text
+        return  name
     
     def valid_webpage(self):
-        pass
+       self.html.page_status()
 
-url = "https://www.newegg.ca/western-digital-blue-sn550-nvme-1tb/p/N82E16820250135?Item=N82E16820250135&cm_sp=Homepage_dailydeals-_-P0_20-250-135-_-12292020"
+       # todo check to see if item# at the top of the screen is present 
+
+
+    
+        
+
+url = "https://www.newegg.ca/asus-va27ehe-27-full-hd/p/N82E16824281014?Description=montiro&cm_re=montiro-_-24-281-014-_-Product"
 test = NeweggProductPage(url)
+print(test.get_item_name())
