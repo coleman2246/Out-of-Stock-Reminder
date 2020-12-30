@@ -1,0 +1,10 @@
+{
+    "supported_sites":{
+        "www.newegg.ca" : "NeweggProductPage"
+    },
+
+    "update_time" : 60
+
+}
+
+
