@@ -1,7 +1,9 @@
 {
     "supported_sites":{
         "www.newegg.ca" : "NeweggProductPage",
-        "www.amazon.ca" : "AmazonProductPage"
+        "www.amazon.ca" : "AmazonProductPage",
+        "www.bestbuy.ca" : "BestBuyProductPage",
+        "www.canadacomputers.com" : "CanadaComputersProductPage"
     },
 
     "update_time" : 60

@@ -1,8 +1,8 @@
 import time
 import json
-import requests
 
 from urllib.parse import urlparse
+import requests
 
 import Errors
  

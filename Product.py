@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-import requests
 
 from bs4 import BeautifulSoup
+import requests
 
 from Utils import UrlUtils,HtmlUtilsRequest
     
@@ -104,8 +104,77 @@ class AmazonProductPage(ProductPage):
 
         # todo check to see if item# at the top of the screen is present 
 
+
+class BestBuyProductPage(ProductPage):
+    def __init__(self,url):
+        self.html = HtmlUtilsRequest(url)
+        self.html.download_html()
+        super().__init__(url)
+
+        self.soup = BeautifulSoup(self.html.request.text,"html.parser") 
+
+    def in_stock(self):
+        text = self.soup.find('span', {"class" : "availabilityMessage_1MO75 container_3LC03"}).text.strip()
+        return text != "Coming soon"
         
 
-url = "https://www.amazon.ca/Flexible-Graphic-Connection-Crossfire-Interconnect/dp/B08JFX48ZD/ref=sr_1_15?dchild=1&keywords=rtx+3060&qid=1609321547&sr=8-15"
-test = AmazonProductPage(url)
-print(test.get_item_name())
+    def get_price(self):
+        if self.in_stock():
+            price = self.soup.find("span", {"class" : "screenReaderOnly_3anTj large_3aP7Z"}).text.strip()
+            return price
+        else:
+            return -1
+
+    def get_item_name(self):
+        name = self.soup.find('h1', {'class': "productName_19xJx"}).text.strip()
+        return  name
+
+    def valid_webpage(self):
+        self.html.page_status()
+
+        # todo check to see if item# at the top of the screen is present 
+
+class CanadaComputersProductPage(ProductPage):
+    def __init__(self,url):
+        self.html = HtmlUtilsRequest(url)
+        self.html.download_html()
+        super().__init__(url)
+
+        self.soup = BeautifulSoup(self.html.request.text,"html.parser") 
+
+    def in_stock(self):
+        for div in self.soup.findAll('div', {'class': 'pi-prod-availability'}):
+            if div.find("span").text.strip() == "Not Available Online":
+                return False
+
+        return True
+
+    def get_price(self):
+        if self.in_stock():
+            price = 0
+            #price = self.soup.find("span", {"class" : "screenReaderOnly_3anTj large_3aP7Z"}).text.strip()
+            for div in self.soup.findAll('span', {'class': 'h2-big'}):
+                print(div)
+        
+
+            return price
+        else:
+            return -1
+
+    def get_item_name(self):
+        name = self.soup.find('h1', {'class': "productName_19xJx"}).text.strip()
+        return  name
+
+    def valid_webpage(self):
+        self.html.page_status()
+
+        # todo check to see if item# at the top of the screen is present 
+                
+
+
+
+
+
+url = "https://www.canadacomputers.com/product_info.php?cPath=179_1927_1930&item_id=160370"
+test = CanadaComputersProductPage(url)
+print(test.get_price())
