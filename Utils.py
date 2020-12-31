@@ -10,7 +10,7 @@ import Errors
 
 class JsonManager():
 
-    def __init__(self,info_path):
+    def __init__(self,info_path = "info.json"):
         self.json = None
         self.path = info_path
 

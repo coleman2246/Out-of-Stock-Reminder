@@ -87,7 +87,7 @@ class StandardProductPage(ProductPage,ABC):
         self.name_args = name_args       
 
     def in_stock(self):
-        self.html = HtmlUtilsRequest(url)
+        self.html = HtmlUtilsRequest(self.url)
         self.soup = BeautifulSoup(self.html.request.text,"html.parser")
         # looks for out of stock button, if found it will return false
 
@@ -162,7 +162,7 @@ class BestBuyProductPageCA(StandardProductPage):
 
        
     def in_stock(self):
-        self.html = HtmlUtilsRequest(url)
+        self.html = HtmlUtilsRequest(self.url)
         self.soup = BeautifulSoup(self.html.request.text,"html.parser")
 
         #looking for out of stock indicator
@@ -187,11 +187,13 @@ class BestBuyProductPageCA(StandardProductPage):
 
 class CanadaComputersProductPage(StandardProductPage):
     def __init__(self,url):
-        super().__init__(url)
+        name_args = ['h1', {'class': "h3 mb-0"}]
+
+        super().__init__(url,name_args=name_args)
 
  
     def in_stock(self):
-        self.html = HtmlUtilsRequest(url)
+        self.html = HtmlUtilsRequest(self.url)
         self.soup = BeautifulSoup(self.html.request.text,"html.parser")
 
         root = self.soup.find('div', {'class': 'pi-prod-availability'})
@@ -220,13 +222,9 @@ class CanadaComputersProductPage(StandardProductPage):
         else:
             return -1
 
-    def get_item_name(self):
-        name = self.soup.find('h1', {'class': "productName_19xJx"}).text.strip()
-        return  name
 
 
 
-
-url = "https://www.canadacomputers.com/product_info.php?cPath=21_273_274&item_id=172948"
-test = CanadaComputersProductPage(url)
-print(test.get_price())
+#url = "https://www.canadacomputers.com/product_info.php?cPath=21_273_274&item_id=172948"
+#test = CanadaComputersProductPage(url)
+#print(test.get_item_name())
