@@ -1,12 +1,12 @@
 {
     "supported_sites":{
-        "www.newegg.ca" : "NeweggProductPage",
-        "www.amazon.ca" : "AmazonProductPage",
-        "www.bestbuy.ca" : "BestBuyProductPage",
+        "www.newegg.ca" : "NeweggProductPageCA",
+        "www.amazon.ca" : "AmazonProductPageCA",
+        "www.bestbuy.ca" : "BestBuyProductPageCA",
         "www.canadacomputers.com" : "CanadaComputersProductPage"
     },
-
-    "update_time" : 60
+    "update_time" : 60,
+    "watch_list" : []
 
 }
 
