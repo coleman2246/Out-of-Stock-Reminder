@@ -5,7 +5,7 @@
         "www.bestbuy.ca": "BestBuyProductPageCA",
         "www.canadacomputers.com": "CanadaComputersProductPage"
     },
-    "update_time": 30,
+    "update_time": 5,
     "watch_list": [
         "https://www.newegg.ca/zotac-geforce-rtx-3060-ti-zt-a30610h-10m/p/N82E16814500507?Description=rtx%203060&cm_re=rtx_3060-_-14-500-507-_-Product",
         "https://www.newegg.ca/asus-geforce-rtx-3060-ti-ko-rtx3060ti-o8g-gaming/p/N82E16814126474?Description=rtx%203060&cm_re=rtx_3060-_-14-126-474-_-Product",
