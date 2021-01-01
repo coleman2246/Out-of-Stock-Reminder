@@ -1,5 +1,6 @@
 import sys
 import threading
+import os
 from abc import ABC, abstractmethod
 from time import gmtime, strftime, sleep
 
@@ -11,16 +12,31 @@ import Utils
 
 
 
+class Notify(ABC):
 
-class Task(ABC):
+    '''
+    This is the class that will check if all the products on the list are in stock. Parameters
+    such as thread_count,watchi_list, and update_time are all from the info.json file.
+
+    The check_updates() will call in_stock_action if the item is said to be in stock and 
+    no_stock_action() if the item is said not to be in stock. Both of these action functions
+    are requierd to be implemented by their children.
+
+    when the item is in stockall other threads are to be locked so that the 
+    info.json objet can be updated so no duplicates of the notifacations are sent
+
+    '''
+
+
 
     def __init__(self,silent =  False):
-        self.json = Utils.JsonManager().json
+        self.json_obj = Utils.JsonManager()
+        self.json = self.json_obj.json
         self.thread_count = self.json["threads"]
         self.urls = self.json["watch_list"]
         self.update_time = self.json["update_time"]
         self.threads = []
-
+        self.lock = threading.Lock()
 
     def identify_url(self,url):
         
@@ -32,54 +48,45 @@ class Task(ABC):
 
 
     @abstractmethod
-    def fire(self,product):
+    def in_stock_action(self,product):
         pass
 
-    def check_produts(self,products):
+    @abstractmethod
+    def no_stock_action(self,product):
+        pass
+
+    def check_products(self,products):
         
         while True:
             for i in products:    
                 instance = self.identify_url(i)
                 status = instance.in_stock()
-                name = instance.get_item_name()
 
-                message = "[ " +strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " ]: "
-
-                message += instance.get_item_name()[:160] + " - "+ bcolors.OKCYAN + Utils.UrlUtils(i).extract_domain() + bcolors.ENDC
-
-
-                if start:
-                    self.fire(instance)
-
-
-                if status:
-                    message += bcolors.OKGREEN + " - In Stock" + bcolors.ENDC
-                else:
-                    message += bcolors.WARNING +" - Not In Stock" + bcolors.ENDC 
-
-                if not silent:
-                    print(message)
+                if status and instance.url not in self.json_obj.get_json()["notified_lists"]:
+                    self.lock.acquire()
+                    self.in_stock_action(instance)
+                    
+                    self.json_obj.get_json()
+                    self.json_obj.json["notified_lists"].append(instance.url)
+                    self.json_obj.write_json()
+                    
+                    self.lock.release()
+                elif not status:
+                    self.no_stock_action(instance)
 
             sleep(self.update_time)
-
-
-
 
     def assign_tasks(self):
         divided_tasks = np.array_split(self.urls,self.thread_count)
         
         for i in range(self.thread_count):
-            sleep(4)
-            t = threading.Thread(target=self.draw_update, args=(divided_tasks[i],))
+        
+            t = threading.Thread(target=self.check_products, args=(divided_tasks[i],))
             self.threads.append(t)
             t.start()
         
         for i in self.threads:
             i.join()
-
-
-
-
 
 class bcolors:
     HEADER = '\033[95m'
@@ -92,16 +99,54 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-class TerminalView(Task):
-    def __init__(self):
+
+class TerminalNotify(Notify):
+    def __init__(self,silent = False):
+        self.silent = silent
         super().__init__()
 
 
+    def no_stock_action(self,instance):
 
-    def fire(self,instance):
+        name = instance.get_item_name()
+
+        message = "[ " +strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " ]: "
+
+        message += instance.get_item_name()[:160] + " - "+ bcolors.OKCYAN + instance.domain + bcolors.ENDC
         
 
-class EmailNotify(Task):
+        message += bcolors.WARNING + " - No Stock" + bcolors.ENDC
+        
+        if not self.silent:
+            print(message)
+
+    def in_stock_action(self,instance):
+       
+        name = instance.get_item_name()
+
+        message = "[ " +strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " ]: "
+
+        message += instance.get_item_name()[:160] + " - "+ bcolors.OKCYAN + instance.domain + bcolors.ENDC
+        
+
+        message += bcolors.OKGREEN + " - In Stock" + bcolors.ENDC
+        
+        if not self.silent:
+            print(message)
+
+class DesktopNotify(TerminalNotify):
+    def __init__(self,silent = False):
+        super().__init__(silent)
+
+
+    def no_stock_action(self,instance):
+        super().no_stock_action(instance)
+
+    def in_stock_action(self,instance):
+        super().in_stock_action(instance)
+        os.system('notify-send "'+instance.get_item_name() +" - "+ instance.domain+'"' ) 
+
+class EmailNotify(Notify):
     def __init__(self):
         super().__init__()
     
@@ -127,8 +172,8 @@ class EmailNotify(Task):
         pass
 
 
-t = EmailNotify()
-t.send_notifacation()
+t = DesktopNotify()
+t.assign_tasks()
 
 
 

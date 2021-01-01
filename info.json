@@ -7,6 +7,7 @@
     },
     "update_time": 5,
     "watch_list": [
+        "https://www.amazon.ca/Corsair-Vengeance-3200MHz-Desktop-Memory/dp/B0143UM4TC/?_encoding=UTF8&pd_rd_w=4Cr7R&pf_rd_p=346668b7-a7c7-4bc4-b726-0e0ca4b6cb2a&pf_rd_r=ZNBCJ1BBJ8FWN60VBNN0&pd_rd_r=e852818d-5b0e-42f7-8b55-039ca42072f5&pd_rd_wg=DuVeJ&ref_=pd_gw_hl_comp_mis_psims",
         "https://www.newegg.ca/zotac-geforce-rtx-3060-ti-zt-a30610h-10m/p/N82E16814500507?Description=rtx%203060&cm_re=rtx_3060-_-14-500-507-_-Product",
         "https://www.newegg.ca/asus-geforce-rtx-3060-ti-ko-rtx3060ti-o8g-gaming/p/N82E16814126474?Description=rtx%203060&cm_re=rtx_3060-_-14-126-474-_-Product",
         "https://www.newegg.ca/asus-geforce-rtx-3060-ti-rog-strix-rtx3060ti-o8g-gaming/p/N82E16814126470?Description=rtx%203060&cm_re=rtx_3060-_-14-126-470-_-Product",
@@ -16,5 +17,8 @@
         "https://www.canadacomputers.com/product_info.php?cPath=43_557_559&item_id=185087",
         "https://www.canadacomputers.com/product_info.php?cPath=43_557_559&item_id=183101"
     ],
-    "threads" : 4
+    "threads": 4,
+    "notified_lists": [
+       
+    ]
 }
