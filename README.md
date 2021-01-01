@@ -7,7 +7,7 @@ As of right now the following stores are suported :
 - www.canadacomputers.com
 
 ## Methods of Notification
-The methods of notification are as follows. All methods have terminal as well:
+The methods of notification are as follows. All methods have terminal output as well by default:
 - Email
 - Terminal
 - System Notifacations (Linux only)
