@@ -17,6 +17,9 @@ class ProductPage(ABC):
     Getting the HTML is left up to the children class because some
     websites may need javascript to get the full html and something
     like selenium will be needed.
+
+    Args:
+        url : str - url of webpage to check
     '''        
     
     def __init__(self,url):
@@ -65,10 +68,11 @@ class StandardProductPage(ProductPage,ABC):
         They are all optional because some children may want to implement
         a specific function.
 
-        in_stock_args - finding the in stock parameter in the method in_stock()
-        out_stock_args = finding the out stock parameter in the method in_stock()
-        price_args = finding the in price parameter in the method get_price()
-        name_args =  finding the in name parameter in the get_item_name() method
+        Args:
+            in_stock_args: [[str,{str : str}]] - finding the in stock parameter in the method in_stock()
+            out_stock_args: [[str,{str : str}]] - finding the out stock parameter in the method in_stock()
+            price_args: [[str,{str : str}]] - finding the in price parameter in the method get_price()
+            name_args: [[str,{str : str}]] -  finding the in name parameter in the get_item_name() method
 
     '''
 
@@ -133,6 +137,9 @@ class NeweggProductPageCA(StandardProductPage):
     expected (a product page) by looking for varous properites that are specific 
     to www.newegg.ca product pages. All functions are inherited from StandarProductPage because newegg
     requires no special functions. All validation is handled by the parent
+
+    Args: 
+        url: str - url of website to check
     """
     def __init__(self,url):
         out_stock_args = ['span',{'class' : 'btn btn-message btn-wide'}]
@@ -151,6 +158,7 @@ class AmazonProductPageCA(StandardProductPage):
         name_args = ['span', {'class': "a-size-large product-title-word-break" , 'id': 'productTitle' }]
 
         super().__init__(url,out_stock_args,in_stock_args,price_args,name_args)
+        self.html.download_html()
 
 
 
@@ -221,10 +229,3 @@ class CanadaComputersProductPage(StandardProductPage):
                 raise Errors.UnableToParsePrice(self.url)
         else:
             return -1
-
-
-
-
-#url = "https://www.canadacomputers.com/product_info.php?cPath=21_273_274&item_id=172948"
-#test = CanadaComputersProductPage(url)
-#print(test.get_item_name())

@@ -1,0 +1,7 @@
+# Used for getting,validating, and parsing the html
+requests==2.25.1
+urllib3==1.26.2
+beautifulsoup4==4.9.3
+
+#used to help with assigning tasks for multithreading
+numpy==1.19.4

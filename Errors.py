@@ -18,6 +18,19 @@ class FailedToValidatePage(Error):
         self.message = 'The request URL: "'+url+ '" did not return the expected code'
         super().__init__(self.message)
 
+class FailedToValidateEmail(Error):
+    def __init__(self,email):
+        self.message = 'The request Email: "'+email+ '" formating could not be verified'
+        super().__init__(self.message)
+
+class UnnacetablEmail(Error):
+    """The email that was requested was not found in Utils.is_acceptable_store while parsing the json """
+    def __init__(self,email):
+        self.message = 'The request Email: "'+email+ '" is not a supported email type. Check info.json for more list of acceptable email providers'
+        super().__init__(self.message)
+
+
+
 class UnnacetablePage(Error):
     """The url that was requested was not found in Utils.is_acceptable_store while parsing the json """
     def __init__(self,url):

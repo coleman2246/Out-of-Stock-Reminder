@@ -5,7 +5,20 @@
         "www.bestbuy.ca": "BestBuyProductPageCA",
         "www.canadacomputers.com": "CanadaComputersProductPage"
     },
-    "update_time": 5,
+    "supported_email_providers": {
+        "gmail.com": "GmailEmailManagment"
+    },
+    "send_email": "email@gmail.com",
+    "receive_emails": [
+        "email@email.com",
+        "email2@email.com"
+    ],
+    "receive-phone-numbers": [
+        "555-555-555"
+    ],
+    "terminal_output": true,
+    "system_notifacations": true,
+    "update_time": 30,
     "watch_list": [
         "https://www.amazon.ca/Corsair-Vengeance-3200MHz-Desktop-Memory/dp/B0143UM4TC/?_encoding=UTF8&pd_rd_w=4Cr7R&pf_rd_p=346668b7-a7c7-4bc4-b726-0e0ca4b6cb2a&pf_rd_r=ZNBCJ1BBJ8FWN60VBNN0&pd_rd_r=e852818d-5b0e-42f7-8b55-039ca42072f5&pd_rd_wg=DuVeJ&ref_=pd_gw_hl_comp_mis_psims",
         "https://www.newegg.ca/zotac-geforce-rtx-3060-ti-zt-a30610h-10m/p/N82E16814500507?Description=rtx%203060&cm_re=rtx_3060-_-14-500-507-_-Product",
@@ -19,6 +32,5 @@
     ],
     "threads": 4,
     "notified_lists": [
-       
     ]
 }

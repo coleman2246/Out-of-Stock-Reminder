@@ -1,5 +1,6 @@
 import time
 import json as js
+import re
 
 from urllib.parse import urlparse
 import requests
@@ -55,8 +56,8 @@ class HtmlUtilsRequest:
         urlutil.validate_url()
 
     
-        header = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36" ,'referer':'https://www.google.com/'}
-        self.request = requests.get(url,headers=header)
+        header = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0", "Accept-Encoding":"gzip, deflate", "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "DNT":"1","Connection":"close", "Upgrade-Insecure-Requests":"1"}    
+        self.request = requests.Session().get(url,headers=header)
 
 
     def download_html(self, name="test.html"):
@@ -68,3 +69,20 @@ class HtmlUtilsRequest:
     def page_status(self):
         if self.request.status_code != 200:
             raise Errors.FailedToValidatePage(self.url)
+
+class EmailUtils:
+    def __init__(self,email):
+        self.email = email
+        self.json = JsonManager().json
+    
+    def extract_provider(self):
+        return self.email.split("@")[-1]
+
+    def is_acceptable_email(self):
+        if not self.extract_provider() in self.json["supported_email_providers"].keys():
+            raise Errors.UnnacetablEmail(self.extract_provider())
+
+    def validate_email(self):
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        if not re.search(regex,self.email):
+            raise Errors.FailedToValidateEmail(self.email)

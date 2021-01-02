@@ -9,7 +9,7 @@ import numpy as np
 import Product
 import Errors
 import Utils
-
+import Managment
 
 
 class Notify(ABC):
@@ -29,7 +29,7 @@ class Notify(ABC):
 
 
 
-    def __init__(self,silent =  False):
+    def __init__(self):
         self.json_obj = Utils.JsonManager()
         self.json = self.json_obj.json
         self.thread_count = self.json["threads"]
@@ -101,6 +101,13 @@ class bcolors:
 
 
 class TerminalNotify(Notify):
+    '''
+    Outputs the stock updates in the terminal. Inhereits from Notify so it gets the assignments 
+    of tasks and checking for free.
+
+    Args:
+        silent : bool - if to show terminal output
+    '''
     def __init__(self,silent = False):
         self.silent = silent
         super().__init__()
@@ -135,6 +142,15 @@ class TerminalNotify(Notify):
             print(message)
 
 class DesktopNotify(TerminalNotify):
+    '''
+    Sends a system notify when in stock. Inhereits from TerminalNotify so it gets terminal output for free.  
+    of tasks and checking for free.
+
+    Args:
+        silent : bool - if to show terminal output
+    '''
+
+
     def __init__(self,silent = False):
         super().__init__(silent)
 
@@ -146,36 +162,54 @@ class DesktopNotify(TerminalNotify):
         super().in_stock_action(instance)
         os.system('notify-send "'+instance.get_item_name() +" - "+ instance.domain+'"' ) 
 
-class EmailNotify(Notify):
-    def __init__(self):
-        super().__init__()
+class EmailNotify(DesktopNotify):
+    '''
+    Will send a email to a list of emails from a source email
+
+    Args:
+        send_email : str - if none will not send email or text, email to send emails from
+        receive_emails : [str] -  emails to message
+        silent : bool - if to show terminal output
+        desktop_notify : bool - if system notify should happen
+    '''
+    def __init__(self,sender_email, receive_emails, silent = False, desktop_notify = True):
+        
+        self.sender_email = sender_email
+        Utils.EmailUtils(self.sender_email).is_acceptable_email()
+
+        self.json = Utils.JsonManager().json
+
+        self.email_obj = self.id_email()(self.sender_email,receive_emails,"","")
+
+        self.desktop_notify = desktop_notify
+
+        
+        super().__init__(silent)
     
 
-    def send_notifacation(self):
-        import smtplib, ssl
+    def id_email(self):
 
-        port = 465  # For SSL
-        send_email = ""
-        receive_email = send_email
-        password = input("Type your password and press enter: ")
+        provider_domain = Utils.EmailUtils(self.sender_email).extract_provider()
 
-        # Create a secure SSL context
-        context = ssl.create_default_context()
+        email = getattr(Managment, self.json["supported_email_providers"][provider_domain])
+        
+        return email
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-            server.login(send_email, password)
-            server.sendmail(send_email, receive_email, "test123")
-            # TODO: Send email here
+    def no_stock_action(self,instance):
+        super().no_stock_action(instance)
 
+    def in_stock_action(self,instance):
+        if self.desktop_notify:
+            super().in_stock_action(instance)
 
-    def notify(self):
-        pass
+        message = "New item in stock " + instance.get_item_name()+" " + instance.get_price() + "- " + instance.url
+        title = instance.domain + " - " + instance.get_item_name()
 
+        self.email_obj.subject = title
+        self.email_obj.message = message
 
-t = DesktopNotify()
-t.assign_tasks()
-
-
+        self.email_obj.send_messages()
+        
 
 
 
