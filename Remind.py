@@ -2,7 +2,7 @@ import sys
 import threading
 import os
 from abc import ABC, abstractmethod
-from time import gmtime, strftime, sleep
+from time import localtime, strftime, sleep
 
 import numpy as np
 
@@ -30,7 +30,7 @@ class Notify(ABC):
         self.json_obj = Utils.JsonManager()
         self.json = self.json_obj.json
         self.thread_count = self.json["threads"]
-        self.urls = self.json["watch_list"]
+        self.urls = sorted(self.json["watch_list"])
         self.update_time = self.json["update_time"]
         self.threads = []
         self.lock = threading.Lock()
@@ -38,7 +38,6 @@ class Notify(ABC):
     def identify_url(self,url):
         
         domain = Utils.UrlUtils(url).extract_domain()
-
         product = getattr(Product, self.json["supported_sites"][domain])
         
         return product(url)
@@ -53,16 +52,22 @@ class Notify(ABC):
         pass
 
     def check_products(self,products):
+        instances = []
+
+        for i in products:
+            instances.append(self.identify_url(i))
         
         while True:
-            for i in products:    
-                instance = self.identify_url(i)
-                status = instance.in_stock()
+            for instance in instances:    
+                if instance.url in self.json_obj.get_json()["notified_lists"]:
+                    continue
 
-                if status and instance.url not in self.json_obj.get_json()["notified_lists"]:
-                    self.lock.acquire()
+                status = instance.in_stock()
+                if status:
                     self.in_stock_action(instance)
                     
+                    self.lock.acquire()
+
                     self.json_obj.get_json()
                     self.json_obj.json["notified_lists"].append(instance.url)
                     self.json_obj.write_json()
@@ -77,7 +82,6 @@ class Notify(ABC):
         divided_tasks = np.array_split(self.urls,self.thread_count)
         
         for i in range(self.thread_count):
-        
             t = threading.Thread(target=self.check_products, args=(divided_tasks[i],))
             self.threads.append(t)
             t.start()
@@ -114,7 +118,7 @@ class TerminalNotify(Notify):
 
         name = instance.get_item_name()
 
-        message = "[ " +strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " ]: "
+        message = "[ " +strftime("%Y-%m-%d %H:%M:%S", localtime()) + " ]: "
 
         message += instance.get_item_name()[:160] + " - "+ bcolors.OKCYAN + instance.domain + bcolors.ENDC
         
@@ -128,7 +132,7 @@ class TerminalNotify(Notify):
        
         name = instance.get_item_name()
 
-        message = "[ " +strftime("%Y-%m-%d %H:%M:%S", gmtime()) + " ]: "
+        message = "[ " +strftime("%Y-%m-%d %H:%M:%S", localtime()) + " ]: "
 
         message += instance.get_item_name()[:160] + " - "+ bcolors.OKCYAN + instance.domain + bcolors.ENDC
         
@@ -157,8 +161,16 @@ class DesktopNotify(TerminalNotify):
 
     def in_stock_action(self,instance):
         super().in_stock_action(instance)
-        os.system('notify-send "'+instance.get_item_name() +" - "+ instance.domain+'"' ) 
+        os.system('notify-send "'+self.strip_illegal_chars(instance.get_item_name()) +" - "+ instance.domain+'"' ) 
 
+    def strip_illegal_chars(self,string):
+        illegal_chars = ['"',"'",]
+        clean = string
+
+        for i in illegal_chars:
+            clean = clean.replace(i,"")
+
+        return clean
 class EmailNotify(DesktopNotify):
     '''
     Will send a email to a list of emails from a source email
@@ -204,13 +216,8 @@ class EmailNotify(DesktopNotify):
 
         self.email_obj.subject = title
         self.email_obj.message = message
-
         self.email_obj.send_messages()
         
-
-
-
-
 
 
 
