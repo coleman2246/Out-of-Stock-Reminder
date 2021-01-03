@@ -11,7 +11,7 @@ The functions may work on other non-canadian versions of these webistes, but if 
 function in the ``supported_sites`` list in that ``info.json``. 
 
 ## Methods of Notification
-The methods of notification are as follows. All methods have terminal output as well by default:
+The methods of notification are as follows. All methods have terminal output by default:
 - Email
 - Terminal
 - System Notifacations (Linux only)
@@ -19,7 +19,7 @@ The methods of notification are as follows. All methods have terminal output as 
 
 ## Requirments
 ### Dependencies
-Most of the dependencies for this project are common python libraries . A `requierments.txt` can be found [here](https://raw.githubusercontent.com/coleman2246/Out-of-Stock-Reminder/master/Dependencies/requirements.txt). They can be installed with `pip3 install -r requirements.txt` The depencies are:
+Most of the dependencies for this project are common python libraries . A `requierments.txt` can be found [here](https://raw.githubusercontent.com/coleman2246/Out-of-Stock-Reminder/master/Dependencies/requirements.txt). They can be installed with `pip3 install -r requirements.txt` The dependencies are:
 - [python 3.9.1](https://www.python.org/downloads/)
 - [numpy](https://pypi.org/project/numpy/)
 - [requests](https://pypi.org/project/requests/)
@@ -41,8 +41,8 @@ SMS is being implemented by piggybacking off of email, so an email is required f
 
 
 ## How to use
-Put the product urls you wish to be notified for in  ``watch_list`` list in ``info.json``. When an item has been confirmed to be in stock you will be notified 
-and the product url will be placed in the ``notified_lists`` in the ``info.json`` file. You will not be notified about this url again until you remove it form the ``notified_list``. Options like the thread count and update time can also be configured in this json file.
+Put the product urls you wish to be notified for in  ``watch_list`` in ``info.json``. When an item has been confirmed to be in stock you will be notified 
+and the product url will be placed in the ``notified_lists`` in the ``info.json`` file. You will not be notified about this url again until you remove it from the ``notified_list``. Options like the thread count and update time can also be configured in this json file.
 
 
 ### Usage
@@ -59,7 +59,7 @@ optional arguments:
 - silent             should the terminal be silent
 ```
 
-By default the notification method if just by terminal. Which is equivalent to :
+By default the notification method is just by terminal. Which is equivalent to:
 ```
 python3 Main.py
 ```
@@ -70,5 +70,5 @@ python3 Main.py -phone 555-555-555 -receiver email@gmail.com -sender email12@gma
 This command will send SMS notifications to the phone number ``555-555-555`` and email notifications to ``email@gmail.com`` from the email ``email12@gmail.com``. This
 command will also have terminal output
 ## Future
-- In the future using selenium a auto-buy option maybe be implemented
+- In the future using selenium, a auto-buy option maybe be implemented
 - Better/more consistent documentation
