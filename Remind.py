@@ -26,9 +26,6 @@ class Notify(ABC):
     info.json objet can be updated so no duplicates of the notifacations are sent
 
     '''
-
-
-
     def __init__(self):
         self.json_obj = Utils.JsonManager()
         self.json = self.json_obj.json
@@ -210,7 +207,6 @@ class EmailNotify(DesktopNotify):
 
         self.email_obj.send_messages()
         
-
 
 
 

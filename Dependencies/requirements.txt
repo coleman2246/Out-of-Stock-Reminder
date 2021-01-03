@@ -5,3 +5,6 @@ beautifulsoup4==4.9.3
 
 #used to help with assigning tasks for multithreading
 numpy==1.19.4
+
+
+ selenium==3.141.0 

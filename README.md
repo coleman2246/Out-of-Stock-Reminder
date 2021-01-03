@@ -22,6 +22,10 @@ already have most installed. A ```requierments.txt``` can be found [here](https:
 - [requests](https://pypi.org/project/requests/)
 - [urlibs](https://pypi.org/project/urllib3/)
 - [beautifulsoup4](https://pypi.org/project/beautifulsoup4/)
+#### Selenium
+Due to Amazon not playing nicely, if you wish to check Amazon store pages you are going to be required to setup
+selenium geckodriver which can be found [here](https://github.com/mozilla/geckodriver/releases).
+
 
 ### Email
 #### Gmail

@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 from bs4 import BeautifulSoup
 import requests
+#from amazoncaptcha import AmazonCaptcha
+
+
 
 from Utils import UrlUtils,HtmlUtilsRequest
 import Errors
@@ -60,28 +63,38 @@ class ProductPage(ABC):
         '''
         pass
 
-class StandardProductPage(ProductPage,ABC):
-    '''
-        A slightly less generic product page abstract class that is meant for pages
-        that dont require javascript and can be parsed following with a simple 
-        soup.find(). all args with _args in the name will be used in soup.find methods.
-        They are all optional because some children may want to implement
-        a specific function.
-
-        Args:
-            in_stock_args: [[str,{str : str}]] - finding the in stock parameter in the method in_stock()
-            out_stock_args: [[str,{str : str}]] - finding the out stock parameter in the method in_stock()
-            price_args: [[str,{str : str}]] - finding the in price parameter in the method get_price()
-            name_args: [[str,{str : str}]] -  finding the in name parameter in the get_item_name() method
-
-    '''
+class SeleniumProductPage(ProductPage,ABC):
 
     def __init__(self, url, out_of_stock_args = None, in_stock_args = None, price_args = None, name_args = None):
+        from selenium import webdriver
+        from selenium.webdriver.firefox.options import Options
+        
+        super().__init__(url)
+
+
+        options = Options()
+        options.add_argument("--headless")
+        driver = webdriver.Firefox(firefox_options=options)
+        self.update_page()
+
+
+    def update_page(self):
+        driver.refresh()
+        driver.get(self.url)
+
+        self.soup = BeautifulSoup(driver.page_source,"html.parser")
+        
+
+
+class StandardProductPage(ProductPage,ABC):
+ 
+    def __init__(self, url, out_of_stock_args = None, in_stock_args = None, price_args = None, name_args = None):
+
+        super().__init__(url)
+
         self.html = HtmlUtilsRequest(url)
         self.soup = BeautifulSoup(self.html.request.text,"html.parser")
 
-        super().__init__(url)
- 
 
         self.out_of_stock_args = out_of_stock_args
         self.in_stock_args = in_stock_args
@@ -149,17 +162,59 @@ class NeweggProductPageCA(StandardProductPage):
 
         super().__init__(url,out_stock_args,in_stock_args,price_args,name_args)
 
+    
+
+
+
+
+class StandardProductPage(ProductPage,ABC):
+ 
+    def __init__(self, url, out_of_stock_args = None, in_stock_args = None, price_args = None, name_args = None):
+        self.html = HtmlUtilsRequest(url)
+        self.soup = BeautifulSoup(self.html.request.text,"html.parser")
+
+        super().__init__(url)
+ 
+
+        self.out_of_stock_args = out_of_stock_args
+        self.in_stock_args = in_stock_args
+
+        self.price_args = price_args
+
+        self.name_args = name_args       
+
+    def in_stock(self):
+        self.html = HtmlUtilsRequest(self.url)
+        self.soup = BeautifulSoup(self.html.request.text,"html.parser")
+        # looks for out of stock button, if found it will return false
+
+        no_stock = self.soup.find(self.out_of_stock_args[0],self.out_of_stock_args[1])
+
+        if no_stock:
+            return False
+        else:
+            
+            #looking for in stock button
+            stock = self.soup.find(self.in_stock_args[0],self.in_stock_args[1])
+            if stock:
+                return True
+            else:
+                raise Errors.UnableToParseStock(self.url)
+
+
+
         
-class AmazonProductPageCA(StandardProductPage):
+class AmazonProductPageCA(SeleniumProductPage):
     def __init__(self,url):
+        
         in_stock_args = ['span', {"class" : "a-size-medium a-color-success"}] 
         out_stock_args = ["a", {"id" : "buybox-see-all-buying-choices-announce", "class": "a-button-text"}]
         price_args = ["span", {'id': "price_inside_buybox" , "class" : "a-size-medium a-color-price"}]
         name_args = ['span', {'class': "a-size-large product-title-word-break" , 'id': 'productTitle' }]
 
         super().__init__(url,out_stock_args,in_stock_args,price_args,name_args)
-        self.html.download_html()
 
+        
 
 
 class BestBuyProductPageCA(StandardProductPage):
