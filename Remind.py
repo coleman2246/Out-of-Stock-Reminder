@@ -171,6 +171,7 @@ class DesktopNotify(TerminalNotify):
             clean = clean.replace(i,"")
 
         return clean
+        
 class EmailNotify(DesktopNotify):
     '''
     Will send a email to a list of emails from a source email

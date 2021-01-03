@@ -8,7 +8,7 @@
     "supported_email_providers": {
         "gmail.com": "GmailEmailManagment"
     },
-    "update_time": 15,
+    "update_time": 10,
     "watch_list": [
         "https://www.newegg.ca/p/N82E16824236994?Item=N82E16824236994&cm_sp=Homepage_SS-_-P0_24-236-994-_-01022021",
         "https://www.amazon.ca/Corsair-Vengeance-3200MHz-Desktop-Memory/dp/B0143UM4TC/?_encoding=UTF8&pd_rd_w=4Cr7R&pf_rd_p=346668b7-a7c7-4bc4-b726-0e0ca4b6cb2a&pf_rd_r=ZNBCJ1BBJ8FWN60VBNN0&pd_rd_r=e852818d-5b0e-42f7-8b55-039ca42072f5&pd_rd_wg=DuVeJ&ref_=pd_gw_hl_comp_mis_psims",
@@ -23,7 +23,5 @@
     ],
     "threads": 8,
     "notified_lists": [
-        "https://www.newegg.ca/p/N82E16824236994?Item=N82E16824236994&cm_sp=Homepage_SS-_-P0_24-236-994-_-01022021",
-        "https://www.amazon.ca/Corsair-Vengeance-3200MHz-Desktop-Memory/dp/B0143UM4TC/?_encoding=UTF8&pd_rd_w=4Cr7R&pf_rd_p=346668b7-a7c7-4bc4-b726-0e0ca4b6cb2a&pf_rd_r=ZNBCJ1BBJ8FWN60VBNN0&pd_rd_r=e852818d-5b0e-42f7-8b55-039ca42072f5&pd_rd_wg=DuVeJ&ref_=pd_gw_hl_comp_mis_psims"
     ]
 }

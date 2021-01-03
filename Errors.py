@@ -68,3 +68,19 @@ class UnableToParsePrice(UnableToParse):
     def __init__(self,url):
         self.attribute = "Price"
         super().__init__(url,self.attribute)
+
+class UnableToParsePhone(Error):
+    def __init__(self,phone):
+        msg = "The following phone number: "+ phone + "could not be parsed. The expected format is 555-555-555."
+        super().__init__(msg)
+
+class InvalidReceiveArgument(Error):
+    def __init__(self):
+        msg = "You've entered an email to send a notifacation with, but have not specified either a phone number or an email"
+        super().__init__(msg)
+
+
+class InvalidArgumentSet(Error):
+    def __init__(self):
+        msg = "You've entered an argument configuartion that is not supported"
+        super().__init__(msg)
