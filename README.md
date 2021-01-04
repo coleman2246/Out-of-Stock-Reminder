@@ -6,7 +6,7 @@ As of right now the following stores are suported:
 - www.bestbuy.ca
 - www.canadacomputers.com  
 - www.bhphotovideo.com (some items will get rate limited and you will receive error 429)
-- 
+- www.vuugo.com
 
 The functions may work on other non-canadian versions of these webistes, but if you wish to test them put the corresponding website and its
 function in the ``supported_sites`` list in that ``info.json``. 
@@ -73,3 +73,6 @@ command will also have terminal output
 ## Future
 - In the future using selenium, a auto-buy option maybe be implemented
 - Better/more consistent documentation
+- More stores
+- Better optimize selenium pages
+- Refactor
