@@ -34,7 +34,6 @@ class Parse:
         
         # if user puts not arguments in 
         if self.all_none(self.args):
-            print("first checked")
             return Remind.TerminalNotify()
 
         # if user uses -system_notify and optional -silent

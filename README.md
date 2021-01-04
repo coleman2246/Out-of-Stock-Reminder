@@ -5,7 +5,8 @@ As of right now the following stores are suported:
 - www.newegg.ca
 - www.bestbuy.ca
 - www.canadacomputers.com  
-
+- www.bhphotovideo.com (some items will get rate limited and you will receive error 429)
+- 
 
 The functions may work on other non-canadian versions of these webistes, but if you wish to test them put the corresponding website and its
 function in the ``supported_sites`` list in that ``info.json``. 

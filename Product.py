@@ -74,7 +74,19 @@ class ProductPage(ABC):
         pass
 
 class StandardProductPage(ProductPage,ABC):
- 
+    '''
+        A slightly less generic product page abstract class that is meant for pages
+        that dont require javascript and can be parsed following with a simple 
+        soup.find(). all args with _args in the name will be used in soup.find methods.
+        They are all optional because some children may want to implement
+        a specific function.
+        Args:
+            in_stock_args: [str,{str : str}] - finding the in stock parameter in the method in_stock()
+            out_stock_args: [str,{str : str}] - finding the out stock parameter in the method in_stock()
+            price_args: [[str,{str : str}]] - finding the in price parameter in the method get_price(),must be 2d because some pages have sale prices as well
+            name_args: [str,{str : str}] -  finding the in name parameter in the get_item_name() method
+    '''
+
     def __init__(self, url, out_of_stock_args = None, in_stock_args = None, price_args = None, name_args = None,selenium = False):
         if not selenium:
             self.html = HtmlUtilsRequest(url)
@@ -114,11 +126,12 @@ class StandardProductPage(ProductPage,ABC):
     def get_price(self):
         super().get_price()
         if self.in_stock():
-            price = self.soup.find(self.price_args[0], self.price_args[1])
-            if price:
-                return price.text.strip()
-            else:
-                raise Errors.UnableToParsePrice(self.url)
+            for i in self.price_args:
+                price = self.soup.find(i[0], i[1])
+                if price:
+                    return price.text.strip()
+            
+            raise Errors.UnableToParsePrice(self.url)
         else:
             return -1
 
@@ -170,18 +183,51 @@ class NeweggProductPageCA(StandardProductPage):
     def __init__(self,url):
         out_stock_args = ['span',{'class' : 'btn btn-message btn-wide'}]
         in_stock_args = ['button',{'class' : 'btn btn-primary btn-wide'}]
-        price_args = ['li', {'class': "price-current"}]
+        price_args = [['li', {'class': "price-current"}]]
         name_args = ['h1', {'class': "product-title"}]
 
         super().__init__(url,out_stock_args,in_stock_args,price_args,name_args)
 
+class BhphotovideoProductPage(StandardProductPage):
+
+    def __init__(self,url):
+        out_stock_args = ['button',{'class' : 'notifyBtn_2u4cU097e899btC11lCxuW buttonTheme_1mBX7Kocn_Oq_wzW6ri7s5 tertiary_3fLAKfyXQQMUL4ZSxgfZGx'}]
+        in_stock_args = ['button',{'class' : 'toCartBtn_2C85cCSy-imVSRqkpuNDT2 buttonTheme_1mBX7Kocn_Oq_wzW6ri7s5'}]
+        price_args = [['div', {'class': "price_1DPoToKrLP8uWvruGqgtaY"}]]
+        name_args = ['h1', {'class': "title1_17KKS47kFEQb7ynVBsRb_5 reset_gKJdXkYBaMDV-W3ignvsP primary_ELb2ysditdCtk24iMBTUs"}]
+        
+        super().__init__(url,out_stock_args,in_stock_args,price_args,name_args)
+
+class VuugoProductPageCA(StandardProductPage):
+    def __init__(self,url):
+        out_stock_args = ['span',{'class' : 'red'}]
+        in_stock_args = ['span',{'class' : 'green'}]
+        price_args = [['span', {'class': "price-new"}],["span",{"class": "text-price"}]]
+        
+        super().__init__(url,out_stock_args,in_stock_args,price_args)
+
+    def get_item_name(self):
+        name = self.soup.find(self.name_args[0], self.name_args[1])
+        if name:
+            return name.text.strip()
+        else:
+            raise Errors.UnableToParseName(self.url)
+                
+
+    def get_item_name(self):
+        div =  self.soup.find("div",{"class":"extra-wrap"})
+        h1 = div.find("h1")
+        
+        
+        return h1.text.strip()
+    
 
         
 class AmazonProductPageCA(SeleniumProductPage):
     def __init__(self,url):
         in_stock_args = ['span', {"class" : "a-size-medium a-color-success"}] 
         out_stock_args = ["a", {"id" : "buybox-see-all-buying-choices-announce", "class": "a-button-text"}]
-        price_args = ["span", {'id': "price_inside_buybox" , "class" : "a-size-medium a-color-price"}]
+        price_args = [["span", {'id': "price_inside_buybox" , "class" : "a-size-medium a-color-price"}]]
         name_args = ['span', {'class': "a-size-large product-title-word-break" , 'id': 'productTitle' }]
 
         super().__init__(url,out_stock_args,in_stock_args,price_args,name_args)

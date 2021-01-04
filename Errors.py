@@ -71,7 +71,7 @@ class UnableToParsePrice(UnableToParse):
 
 class UnableToParsePhone(Error):
     def __init__(self,phone):
-        msg = "The following phone number: "+ phone + "could not be parsed. The expected format is 555-555-555."
+        msg = "The following phone number: "+ phone + " could not be parsed. The expected format is 555-555-555."
         super().__init__(msg)
 
 class InvalidReceiveArgument(Error):

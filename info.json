@@ -3,7 +3,9 @@
         "www.newegg.ca": "NeweggProductPageCA",
         "www.amazon.ca": "AmazonProductPageCA",
         "www.bestbuy.ca": "BestBuyProductPageCA",
-        "www.canadacomputers.com": "CanadaComputersProductPage"
+        "www.canadacomputers.com": "CanadaComputersProductPage",
+        "www.bhphotovideo.com": "BhphotovideoProductPage",
+        "www.vuugo.com": "VuugoProductPageCA"
     },
     "supported_email_providers": {
         "gmail.com": "GmailEmailManagment"
@@ -19,9 +21,13 @@
         "https://www.amazon.ca/EVGA-08G-P5-3755-KR-GeForce-Cooling-Backplate/dp/B08L8L71SM/ref=sr_1_5?dchild=1&keywords=rtx+3060&qid=1609404704&sr=8-5",
         "https://www.canadacomputers.com/product_info.php?cPath=43_557_559&item_id=184760",
         "https://www.canadacomputers.com/product_info.php?cPath=43_557_559&item_id=185087",
-        "https://www.canadacomputers.com/product_info.php?cPath=43_557_559&item_id=183101"
+        "https://www.canadacomputers.com/product_info.php?cPath=43_557_559&item_id=183101",
+        "https://www.vuugo.com/amd-cpu-100-100000031BOX.html",
+        "https://www.vuugo.com/coolermaster-cpu-cooler-MLW-D24M-A20PC-R1.html",
+        "https://www.vuugo.com/corsair-case-fans-CO-9050072-WW.html"
     ],
-    "threads": 8,
+    "threads": 4,
     "notified_lists": [
+        
     ]
 }

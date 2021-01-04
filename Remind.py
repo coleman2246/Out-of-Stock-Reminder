@@ -38,6 +38,7 @@ class Notify(ABC):
     def identify_url(self,url):
         
         domain = Utils.UrlUtils(url).extract_domain()
+        Utils.UrlUtils(url).is_acceptable_store()
         product = getattr(Product, self.json["supported_sites"][domain])
         
         return product(url)
@@ -138,7 +139,6 @@ class TerminalNotify(Notify):
         
 
         message += bcolors.OKGREEN + " - In Stock" + bcolors.ENDC
-        
         if not self.silent:
             print(message)
 
@@ -211,6 +211,8 @@ class EmailNotify(DesktopNotify):
     def in_stock_action(self,instance):
         if self.desktop_notify:
             super().in_stock_action(instance)
+        else:
+            super(DesktopNotify,self).in_stock_action(instance)
 
         message = "New item in stock " + instance.get_item_name()+" " + instance.get_price() + "- " + instance.url
         title = instance.domain + " - " + instance.get_item_name()
