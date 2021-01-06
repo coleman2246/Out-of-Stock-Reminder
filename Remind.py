@@ -33,7 +33,7 @@ class Notify(ABC):
         self.urls = sorted(self.json["watch_list"])
         self.update_time = self.json["update_time"]
         self.threads = []
-        self.lock = threading.Lock()
+        
 
     def identify_url(self,url):
         
@@ -67,13 +67,12 @@ class Notify(ABC):
                 if status:
                     self.in_stock_action(instance)
                     
-                    self.lock.acquire()
-
+                    
                     self.json_obj.get_json()
                     self.json_obj.json["notified_lists"].append(instance.url)
                     self.json_obj.write_json()
                     
-                    self.lock.release()
+                    
                 elif not status:
                     self.no_stock_action(instance)
 

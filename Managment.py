@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
-
-import Utils
+import time
 
 import os.path
 import base64
 from email.mime.text import MIMEText
 import pickle
-
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+
+import Utils
 
 class EmailManagment(ABC):
     '''
@@ -96,6 +96,7 @@ class GmailEmailManagment(EmailManagment):
     #service, user_id, message
     def send_messages(self):
         for i in self.receive_emails:
+            time.sleep(.5)
             self.credentials.users().messages().send(userId="me", body=self.create_message(i)).execute()
 
 

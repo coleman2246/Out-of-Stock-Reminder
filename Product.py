@@ -243,7 +243,7 @@ class BestBuyProductPageCA(StandardProductPage):
 
        
     def in_stock(self):
-        super.update_page()
+        super().update_page()
 
         #looking for out of stock indicator
         out_stock = self.soup.find('span', {"class" : "availabilityMessage_1MO75 container_3LC03"})

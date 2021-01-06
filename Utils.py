@@ -4,6 +4,7 @@ import re
 
 from urllib.parse import urlparse
 import requests
+from filelock import FileLock
 
 import Errors
  
@@ -24,8 +25,9 @@ class JsonManager():
 
 
     def write_json(self):
-        with open(self.path, 'w') as f:
-            js.dump(self.json, f,indent=4)
+        with FileLock(self.path):
+            with open(self.path, 'w') as f:
+                js.dump(self.json, f,indent=4)
 
 class UrlUtils:
     def __init__(self, url,json_path= "info.json"):

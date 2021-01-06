@@ -8,3 +8,5 @@ numpy==1.19.4
 
 
 selenium==3.141.0 
+
+filelock=3.0.12
